@@ -1,1 +1,2 @@
-By referencing index numbers, we can isolate one of the characters in a string. We do this by putting the index numbers in square brackets. Let’s declare a string, print it, and call the index number in square brackets
+MI MAMA ME MIMA
+MAMUT
