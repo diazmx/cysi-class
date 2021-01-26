@@ -1,6 +1,8 @@
 from huffman import *
+from two import *
 import string
 import re
+import math
 
 
 def readfile(f):
@@ -38,22 +40,28 @@ def check_frecuency_book(st):
     for key, value in sorted(frec_letters):
         print(key, value*100)
 
+    return frec_letters, new_s
+
 
 def main():
     f = open("in.txt", "r")
     msg = readfile(f)
-    print(msg)
-    frec_list = count_frecuency(msg)
-    h_codes = convert_to_treelist(frec_list)
-    test = coding(msg, h_codes)
-    print(test)
-    test2 = decoding(test, h_codes)
-    print(test2)
-
+    msg = msg.lower()
     # PArte 2
     fbook = open("book.txt", 'r')
     text_book = readfile(fbook)
-    check_frecuency_book(text_book)
+    f_letters, new_text_book = check_frecuency_book(text_book)
+
+    activity_two(f_letters, new_text_book)
+
+    frec_list = count_frecuency(new_text_book)
+    h_codes = convert_to_treelist(frec_list)
+    #msg = "azucar"
+    print("Mensaje : ", msg)
+    test = coding(msg, h_codes)
+    print("Codificación : ", test)
+    test2 = decoding(test, h_codes)
+    print("Decodificación : ", test2)
 
 
 if __name__ == "__main__":
