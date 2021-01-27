@@ -1,67 +1,60 @@
 import math
 from nltk import everygrams
+import matplotlib.pyplot as plt
+import numpy as np
 
 
-def activity_two(frec_letters, msg):
+def activity_two(frec_letters, msg, n_grams):
+
     R = math.log(len(frec_letters), 2)
-    print("Rango absoluto R = ", R)
-
-    grams = list(everygrams(msg.lower(), 2, 2))
+    print("\nRango absoluto R = ", R)
+    # Creamos diferentes gramas
+    grams = list(everygrams(msg.lower(), n_grams, n_grams))
+    # Convertirmos a "set" para quitar elementos repetidos
     realgram = list(set(grams))
-    # print(len(realgram))
-    r = rango(2, len(realgram))
-    print("rango r = ", r)
+
+    # Calcular rangos r
+    rangos_grams = graficar_rangos(n_grams+1, msg.lower(), R)
+    # Imprimar los rangos
+    print("\nrangos 'r' para cada n-gram")
+    for i in range(n_grams):
+        print("n-gram[", i+1, "] - R =", rangos_grams[i])
 
     # Redundancia para cada n
-    D = R - r
-    print("Redundancia D = ", D)
+    print("\nRedundancia 'D' para cada rango 'r'")
+    for i in range(n_grams):
+        print("n-gram[", i+1, "] - D =", R-rangos_grams[i])
 
+    print("\nObservar figura 'grafica_rango.png'")
     # Cantidad de información de cada char
     # ademas de entroopia
     entropia = 0
-    print("Bits de informacion para cada simbolo")
+    print("\nBits de informacion para cada simbolo")
     for key, frec in frec_letters:
         bit_info = math.log2(1/frec)
         print(key, bit_info)
         entropia += (frec * bit_info)
-
-    print("Entropia = ", entropia)
-
-
-def create_digrama(keys):
-    """
-    Functions to create cronogram
-    """
-    l_grams = []
-    for i in keys:
-        pre = i[0]
-        for j in keys:
-            l_grams.append((pre, j[0]))
-    return l_grams
+    print("\nEntropia = ", entropia)
 
 
-def create_trigrama(keys):
-    """
-    Functions to create cronogram
-    """
-    l_grams = []
-    for i in keys:
-        pre = i[0]
-        for j in keys:
-            mid = j[0]
-            for k in keys:
-                l_grams.append((pre, mid, k[0]))
-    return l_grams
+def graficar_rangos(max_rango, msg, R):
+    plt.close
+    lis_values_rangos = []
+    for i in range(1, max_rango):
+        # Creamos diferentes gramas
+        grams = list(everygrams(msg, i, i))
+        # Convertirmos a "set" para quitar elementos repetidos
+        realgram = list(set(grams))
+        r = math.log(len(realgram), 2**i)
+        lis_values_rangos.append(r)
 
+    D = R - np.array(lis_values_rangos)
+    plt.plot(list(range(1, max_rango)),
+             lis_values_rangos, 'ro', label="rango r")
+    plt.plot(list(range(1, max_rango)), D, 'bs', label="Redundancia D")
+    plt.axis([0, max_rango, 0, 5])
+    plt.xlabel("Poligramas")
+    plt.legend()
+    plt.savefig("grafica_rango.png")
 
-def count_occurences(poligram, realgram):
-    count_oc = 0
-    for gram in poligram:
-        for key in realgram:
-            if gram == key:
-                count_oc += 1
-    return count_oc
-
-
-def rango(N, occurencias):
-    return math.log(occurencias, 2**N)
+    return lis_values_rangos

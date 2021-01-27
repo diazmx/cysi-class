@@ -37,12 +37,10 @@ def convert_to_treelist(list_):
     """
     Function to covert a simple list to a TreeList
     """
-    # print(list_)
     tlist.create(list_)
-    # tlist.print_list()
     tlist.complete()
-    # tlist.print_list()
     tlist.print_tree(tlist.head.next.tree, "")
+    print("\nCodigos generados en archivo 'out.txt'")
     tlist.close_file()
     o = open("out.txt", "r")
     h_codes = readfile(o)
