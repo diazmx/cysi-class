@@ -6,6 +6,10 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from random import seed
+from random import randint
+import bitarray
+ba = bitarray.bitarray()
 
 
 def readfile(f):
@@ -69,14 +73,50 @@ def main_asd(remove_punctuation=False):
         activity_two(frec, msg, ngrams, fil)
     print("Estadisticas completadas")
 
+
+def openssl_functions(text=1, algorithm=1):
     # Generete a new key
     # generate_key(256)
     # Encode new message
-    encode_openssl('aes', 'textos/txtmil.txt',
-                   'openssl/enc_txtmil_aes.enc', 'llaves/llave-256.key')
-    # Decode new message
-    decode_openssl('aes', 'openssl/enc_txtmil_aes.enc',
-                   'openssl/dec_txtmil_aes.dec', 'llaves/llave-256.key')
+    if text == 1:
+        if algorithm == 1:
+            encode_openssl('aes', 'textos/txtmil.txt',
+                           'openssl/enc_txtmil_des3.enc', 'llaves/llave-128.key')
+            # Decode new message
+            decode_openssl('aes', 'openssl/enc_txtmil_des3.enc',
+                           'openssl/dec_txtmil_des3.dec', 'llaves/llave-128.key')
+        else:
+            encode_openssl('aes', 'textos/txtmil.txt',
+                           'openssl/enc_txtmil_aes.enc', 'llaves/llave-256.key')
+            # Decode new message
+            decode_openssl('aes', 'openssl/enc_txtmil_aes.enc',
+                           'openssl/dec_txtmil_aes.dec', 'llaves/llave-256.key')
+    elif text == 2:
+        if algorithm == 1:
+            encode_openssl('aes', 'textos/txtdiezmil.txt',
+                           'openssl/enc_txtdiezmil_des3.enc', 'llaves/llave-128.key')
+            # Decode new message
+            decode_openssl('aes', 'openssl/enc_txtdiezmil_des3.enc',
+                           'openssl/dec_txtdiezmil_des3.dec', 'llaves/llave-128.key')
+        else:
+            encode_openssl('aes', 'textos/txtdiezmil.txt',
+                           'openssl/enc_txtdiezmil_aes.enc', 'llaves/llave-256.key')
+            # Decode new message
+            decode_openssl('aes', 'openssl/enc_txtdiezmil_aes.enc',
+                           'openssl/dec_txtdiezmil_aes.dec', 'llaves/llave-256.key')
+    else:
+        if algorithm == 1:
+            encode_openssl('aes', 'textos/txtcincuenta.txt',
+                           'openssl/enc_txtcincuenta_des.enc', 'llaves/llave-128.key')
+            # Decode new message
+            decode_openssl('aes', 'openssl/enc_txtcincuenta_des.enc',
+                           'openssl/dec_txtcincuenta_des.dec', 'llaves/llave-128.key')
+        else:
+            encode_openssl('aes', 'textos/txtcincuenta.txt',
+                           'openssl/enc_txtcincuenta_aes.enc', 'llaves/llave-256.key')
+            # Decode new message
+            decode_openssl('aes', 'openssl/enc_txtcincuenta_aes.enc',
+                           'openssl/dec_txtcincuenta_aes.dec', 'llaves/llave-256.key')
 
 
 def generate_key(n):
@@ -99,7 +139,7 @@ def encode_openssl(algorithm, in_file_name, out_file_name, key_file_name):
     Parameters
     ----------
     algorithm       : str des3 | aes
-    in_file_name    : str name of input file  
+    in_file_name    : str name of input file
     out_file_name   : str name of output file
     key_file_name   : str name of key file
     """
@@ -120,7 +160,7 @@ def decode_openssl(algorithm, in_file_name, out_file_name, key_file_name):
     Parameters
     ----------
     algorithm       : str des3 | aes
-    in_file_name    : str name of input file  
+    in_file_name    : str name of input file
     out_file_name   : str name of output file
     key_file_name   : str name of key file
     """
@@ -163,6 +203,34 @@ def clean_text(s, space=True):
     if not space:
         s = s.replace(' ', '')
     return s
+
+
+def paso8():
+    msg = "mi"
+    ba.frombytes(msg.encode('utf-8'))
+    print(ba)
+    seed(1)
+    # for i in range(31):
+    val = randint(-1, 127)
+    be = ba
+    lista = be.tolist()
+    listaa = ba.tolist()
+    lista[2] = False
+    print(listaa, lista)
+    aas = hamming(listaa, lista)
+    print(aas)
+
+
+def hamming(a, b):
+    res = 0
+    if len(a) != len(b):
+        return "Error: No son iguales"
+    else:
+        for i, j in zip(a, b):
+            print(i, j)
+            if i != j:
+                res += 1
+    return res
 
 
 def main_two():
@@ -210,7 +278,7 @@ def read_binary_file():
         test = bytearray(f.read())
     s = str()
     for i in test:
-        #s += "{0:b}".format(i)
+        # s += "{0:b}".format(i)
         s += get_bin(i, 8)
     return s
 
@@ -234,4 +302,6 @@ def get_bin(x, n=0):
 
 
 if __name__ == "__main__":
-    main_asd(True)
+    # main_asd(True)
+    # openssl_functions(3, 2)
+    paso8()
