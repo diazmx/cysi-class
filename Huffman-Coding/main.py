@@ -36,7 +36,7 @@ def graficar_comparacion(compare_frec):
                     label='Frecuencia de Monograma')
     rects2 = ax.bar(x + width/2, mi_frec, width, label='Mi resultados')
 
-    # Add some text for labels, title and custom x-axis tick labels, etc.
+    # Titles
     ax.set_ylabel('Frecuencia')
     ax.set_xticks(x)
     ax.set_xticklabels(letras)
@@ -112,16 +112,26 @@ def main():
     fbook = open("book.txt", 'r')
     text_book = readfile(fbook)
     # Obtener la frecuencia con el string procesado
-    f_letters, new_text_book = check_frecuency_book(text_book)
+    f_letters, new_text_book = check_frecuency_book(msg)
 
     frec_list = count_frecuency(new_text_book)
     h_codes = convert_to_treelist(frec_list)
     # Mesaje para codificar
-    print("\nMensaje : ", msg)
-    test = coding(msg, h_codes)
-    print("Codificación : ", test)
+    # print("\nMensaje : ", new_text_book)
+    f_out1 = open("mensaje.txt", "w")
+    f_out1.write(new_text_book)
+    f_out1.close()
+    test = coding(new_text_book, h_codes)
+    # print("Codificación : ", test)
+    f_out2 = open("simbolos.txt", "w")
+    f_out2.write(test)
+    f_out2.close()
     test2 = decoding(test, h_codes)
-    print("Decodificación : ", test2)
+    # print("Decodificación : ", test2)
+    f_out = open("decod.txt", "w")
+    f_out.write(test2)
+    f_out.close()
+
     print()
     print("Parte 2")
 
@@ -130,8 +140,76 @@ def main():
     f_letters, new_text_book = check_frecuency_book__without_space(text_book)
     print("\nFrecuencia de Monogras - Comparación")
     print("Observar figura 'compara.png'")
-    activity_two(f_letters, new_text_book, 5)
+    activity_two(f_letters, msg, 5)
+
+
+def main_two():
+    f = open("in.txt", "r")
+    msg = readfile(f)
+    msg = msg.lower()
+
+    # Parte 2: Lee el archivo con el libro
+    fbook = open("book.txt", 'r')
+    text_book = readfile(fbook)
+
+    frec_list = count_frecuency(msg)
+    h_codes = convert_to_treelist(frec_list)
+
+    bits_text = coding(msg, h_codes)
+    write_binary_file(bits_text)
+    print("binary file done!")
+    read_bin = read_binary_file()
+    print(bits_text, len(bits_text))
+    print(read_bin, len(read_bin))
+    test2 = decoding(read_bin, h_codes)
+    # print("Decodificación : ", test2)
+    f_out = open("decod.txt", "w")
+    f_out.write(test2)
+    f_out.close()
+
+
+def write_binary_file(s):
+    i = 0
+    buffer = bytearray()
+    while i < len(s):
+        buffer.append(int(s[i:i+8], 2))
+        i += 8
+
+    # now write your buffer to a file
+    print(buffer)
+    with open("binary_file.bin", "bw") as f:
+        f.write(buffer)
+
+    f.close()
+
+
+def read_binary_file():
+    with open("binary_file.bin", "rb") as f:
+        test = bytearray(f.read())
+    s = str()
+    for i in test:
+        #s += "{0:b}".format(i)
+        s += get_bin(i, 8)
+    return s
+
+
+def get_bin(x, n=0):
+    """
+    Get the binary representation of x.
+
+    Parameters
+    ----------
+    x : int
+    n : int
+        Minimum number of digits. If x needs less digits in binary, the rest
+        is filled with zeros.
+
+    Returns
+    -------
+    str
+    """
+    return format(x, 'b').zfill(n)
 
 
 if __name__ == "__main__":
-    main()
+    main_two()
