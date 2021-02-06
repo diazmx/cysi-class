@@ -1,3 +1,4 @@
+import codecs
 from huffman import *
 from two import *
 import string
@@ -21,6 +22,109 @@ def readfile(f):
     for line in flines:
         msg += line.replace('\n', "")
     return msg
+
+
+def testing():
+    txtlist_enc = list()
+    f = open("openssl/enc_txtmil_des3.enc", 'r',
+             encoding='UTF-8', errors='replace')
+    txt = f.read()
+    txtlist_enc.append(txt)
+
+    # Count frecuency
+    frec_list = list()
+    for t in txtlist_enc:
+        frec_list.append(count_frecuency(t))
+    print("Frecuencias calculadas")
+
+    # Get Huffman Codes
+    hcodes_list = list()
+    for f in frec_list:
+        hcodes_list.append(convert_to_treelist(f))
+    print("Codigos calculados")
+
+    # Encoding every text and open new file to save
+    # statistics and dictionary
+    data_out_txt1 = open("openssl/data_txtmil_des.txt", 'w')
+    files_list = [data_out_txt1]
+    # Print dictionarys
+    for fi, hcodes in zip(files_list, hcodes_list):
+        fi.write("Diccionario:\n")
+        for elem in hcodes:
+            fi.write(str(elem)+'\n')
+        fi.write("=====================\n")
+    print("Codigos impresos de codificacion")
+
+    # Statistics
+    ngrams = 5
+    for frec, msg, fil in zip(frec_list, txtlist_enc, files_list):
+        activity_two(frec, msg, ngrams, fil)
+    print("Estadisticas completadas")
+
+
+def step5(codificacion='UTF-8', errores='ignore'):
+    txtlist_enc = list()
+    # Read every text
+    f = open("openssl/enc_txtmil_des3.enc", 'r',
+             encoding=codificacion, errors=errores)
+    txt = f.read()
+    txtlist_enc.append(txt)
+    f = open("openssl/enc_txtmil_aes.enc", 'r',
+             encoding=codificacion, errors=errores)
+    txt = f.read()
+    txtlist_enc.append(txt)
+    f = open("openssl/enc_txtdiezmil_des3.enc", 'r',
+             encoding=codificacion, errors=errores)
+    txt = f.read()
+    txtlist_enc.append(txt)
+    f = open("openssl/enc_txtdiezmil_aes.enc", 'r',
+             encoding=codificacion, errors=errores)
+    txt = f.read()
+    txtlist_enc.append(txt)
+    f = open("openssl/enc_txtcincuenta_des.enc",
+             'r', encoding=codificacion, errors=errores)
+    txt = f.read()
+    txtlist_enc.append(txt)
+    f = open("openssl/enc_txtcincuenta_aes.enc",
+             'r', encoding=codificacion, errors=errores)
+    txt = f.read()
+    txtlist_enc.append(txt)
+
+    # Count frecuency
+    frec_list = list()
+    for t in txtlist_enc:
+        frec_list.append(count_frecuency(t))
+    print("Frecuencias calculadas")
+
+    # Get Huffman Codes
+    hcodes_list = list()
+    for f in frec_list:
+        hcodes_list.append(convert_to_treelist(f))
+    print("Codigos calculados")
+
+    # Encoding every text and open new file to save
+    # statistics and dictionary
+    data_out_txt1 = open("openssl/data_txtmil_des.txt", 'w')
+    data_out_txt2 = open("openssl/data_txtmil_aes.txt", 'w')
+    data_out_txt3 = open("openssl/data_txtdiezmil_des.txt", 'w')
+    data_out_txt4 = open("openssl/data_txtdiezmil_aes.txt", 'w')
+    data_out_txt5 = open("openssl/data_txtcincuenta_des.txt", 'w')
+    data_out_txt6 = open("openssl/data_txtcincuenta_aes.txt", 'w')
+    files_list = [data_out_txt1, data_out_txt2, data_out_txt3,
+                  data_out_txt4, data_out_txt5, data_out_txt6]
+    # Print dictionarys
+    for fi, hcodes in zip(files_list, hcodes_list):
+        fi.write("Diccionario:\n")
+        for elem in hcodes:
+            fi.write(str(elem)+'\n')
+        fi.write("=====================\n")
+    print("Codigos impresos de codificacion")
+
+    # Statistics
+    ngrams = 5
+    for frec, msg, fil in zip(frec_list, txtlist_enc, files_list):
+        activity_two(frec, msg, ngrams, fil)
+    print("Estadisticas completadas")
 
 
 def main_asd(remove_punctuation=False):
@@ -72,6 +176,9 @@ def main_asd(remove_punctuation=False):
     for frec, msg, fil in zip(frec_list, txt_list, files_list):
         activity_two(frec, msg, ngrams, fil)
     print("Estadisticas completadas")
+
+    ##### Paso 5 #####
+    # Aplicar las estadisticas a los textos cifrados
 
 
 def openssl_functions(text=1, algorithm=1):
@@ -206,7 +313,7 @@ def clean_text(s, space=True):
 
 
 def paso8():
-    msg = "mi"
+    msg = "mi compu es gris"
     ba.frombytes(msg.encode('utf-8'))
     print(ba)
     seed(1)
@@ -304,4 +411,6 @@ def get_bin(x, n=0):
 if __name__ == "__main__":
     # main_asd(True)
     # openssl_functions(3, 2)
-    paso8()
+    # paso8()
+
+    step5(codificacion='latin-1')
