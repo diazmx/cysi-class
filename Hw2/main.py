@@ -24,44 +24,6 @@ def readfile(f):
     return msg
 
 
-def testing():
-    txtlist_enc = list()
-    f = open("openssl/enc_txtmil_des3.enc", 'r',
-             encoding='UTF-8', errors='replace')
-    txt = f.read()
-    txtlist_enc.append(txt)
-
-    # Count frecuency
-    frec_list = list()
-    for t in txtlist_enc:
-        frec_list.append(count_frecuency(t))
-    print("Frecuencias calculadas")
-
-    # Get Huffman Codes
-    hcodes_list = list()
-    for f in frec_list:
-        hcodes_list.append(convert_to_treelist(f))
-    print("Codigos calculados")
-
-    # Encoding every text and open new file to save
-    # statistics and dictionary
-    data_out_txt1 = open("openssl/data_txtmil_des.txt", 'w')
-    files_list = [data_out_txt1]
-    # Print dictionarys
-    for fi, hcodes in zip(files_list, hcodes_list):
-        fi.write("Diccionario:\n")
-        for elem in hcodes:
-            fi.write(str(elem)+'\n')
-        fi.write("=====================\n")
-    print("Codigos impresos de codificacion")
-
-    # Statistics
-    ngrams = 5
-    for frec, msg, fil in zip(frec_list, txtlist_enc, files_list):
-        activity_two(frec, msg, ngrams, fil)
-    print("Estadisticas completadas")
-
-
 def step5(codificacion='UTF-8', errores='ignore'):
     txtlist_enc = list()
     # Read every text
@@ -127,7 +89,7 @@ def step5(codificacion='UTF-8', errores='ignore'):
     print("Estadisticas completadas")
 
 
-def main_asd(remove_punctuation=False):
+def step3(remove_punctuation=False):
     # Read every text
     f = open("textos/txtmil.txt", 'r')
     txt1 = readfile(f)
@@ -409,8 +371,8 @@ def get_bin(x, n=0):
 
 
 if __name__ == "__main__":
-    # main_asd(True)
+    step3()
     # openssl_functions(3, 2)
     # paso8()
 
-    step5(codificacion='latin-1')
+    # step5(codificacion='latin-1')
