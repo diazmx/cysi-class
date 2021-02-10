@@ -275,28 +275,161 @@ def clean_text(s, space=True):
 
 
 def paso8():
-    msg = "mi compu es gris"
-    ba.frombytes(msg.encode('utf-8'))
-    print(ba)
+    text_instances = generate_msg(False)
+    # convert_to_file(text_instances)
+    # encode_instances()
+    compare_bits(text_instances)
+
+
+def compare_bits(text_instances, tipo='des'):
+    list_bits_enc = list()
+    if tipo == 'des':
+        str_file = "paso8/enc/des/des-txt"
+        j = 1
+        for i in range(32):
+            strfile = str_file + str(j) + ".enc"
+            f = open(strfile, 'rb')
+            txt = f.read()
+            list_bits_enc.append(txt[8:])
+            j += 1
+            print(txt[8:])
+        asdasd = list()
+        for i in list_bits_enc:
+            str_bits = str()
+            for x in i:  # Convert bytes to bits
+                # print(x, end=' ')
+                str_bits += f'{x:08b}'
+            asdasd.append(str_bits)
+        for i in asdasd:
+            print(i, len(i))
+        print()
+
+
+def encode_instances():
+    # GEnerara criptograma des para cada file
+    str_file_in = "paso8/txt"
+    str_file_out = "paso8/enc/des/des-txt"
+    j_in = 1
+    for i in range(32):
+        strfilein = str_file_in + str(j_in) + ".txt"
+        strfileout = str_file_out + str(j_in) + ".enc"
+        encode_openssl('des3', strfilein, strfileout, 'llaves/llave-128.key')
+        j_in += 1
+
+    # GEnerara criptograma des para cada file
+    str_file_in = "paso8/txt"
+    str_file_out = "paso8/enc/aes/aes-txt"
+    j_in = 1
+    for i in range(32):
+        strfilein = str_file_in + str(j_in) + ".txt"
+        strfileout = str_file_out + str(j_in) + ".enc"
+        encode_openssl('aes', strfilein, strfileout, 'llaves/llave-256.key')
+        j_in += 1
+
+
+def convert_to_file(new_instances):
+    str_file = "paso8/txt"
+    j = 1
+    for i in new_instances:
+        strfile = str_file + str(j) + ".txt"
+        f = open(strfile, 'w')
+        f.write(str(bitstring_to_bytes(i))[2:-1])
+        f.close()
+        j += 1
+
+
+def bitstring_to_bytes(s):
+    return int(s, 2).to_bytes(-(-len(s) // 8), byteorder='big')
+
+
+def generate_msg(random_msg=True, msg='Mi compu es roja'):
+    """
+    Return a list with 32 differents messages.
+
+    Parameters
+    ----------
+    random_msg : bool
+        Decistion to generate random message.
+    msg: str
+        Message to generate
+
+    Returns
+    -------
+    list
+        List with 32 differents messages.
+    """
+    if random_msg:
+        # Generate a random msg
+        print()
+    else:
+        if len(msg) == 16:  # Check if lenght of msg is 16 bytes
+            arr_bytes = bytes(msg, 'utf-8')
+            str_bits = str()
+            for x in arr_bytes:  # Convert bytes to bits
+                # print(x, end=' ')
+                str_bits += f'{x:08b}'
+            random_numers = generate_random_no_repeat()
+            new_instances = list()
+            new_instances.append(str_bits)
+            for i in random_numers:
+                temp_str = list(str_bits)
+                if temp_str[i] == '0':
+                    temp_str[i] = '1'
+                else:
+                    temp_str[i] = '0'
+                new_instances.append("".join(temp_str))
+
+            return new_instances
+        else:
+            print("Error: Please enter a message with 16 bytes!")
+
+
+def generate_random_no_repeat():
+    """
+    Return a list with 31 unique and random integers.
+
+    Parameters
+    ----------
+    Returns
+    -------
+    list
+        List with 31 integers.
+    """
     seed(1)
-    # for i in range(31):
-    val = randint(-1, 127)
-    be = ba
-    lista = be.tolist()
-    listaa = ba.tolist()
-    lista[2] = False
-    print(listaa, lista)
-    aas = hamming(listaa, lista)
-    print(aas)
+    new_rand = list()
+    while len(new_rand) < 31:
+        val = randint(0, 127)
+        if val in new_rand:
+            pass
+        else:
+            new_rand.append(val)
+    print(len(new_rand))
+    return new_rand
 
 
-def hamming(a, b):
+def hamming_distance(a, b):
+    """
+    Return Hamming Distance between two string of bytes.
+
+    Parameters
+    ----------
+    a : str
+        First string to compare.
+    b : str
+        Secodn string to compare.
+
+    Returns
+    -------
+    int
+        number of differents bits in common.
+    Error
+        string have differents lenghts.
+    """
     res = 0
     if len(a) != len(b):
         return "Error: No son iguales"
     else:
         for i, j in zip(a, b):
-            print(i, j)
             if i != j:
                 res += 1
     return res
@@ -371,8 +504,8 @@ def get_bin(x, n=0):
 
 
 if __name__ == "__main__":
-    step3()
+    # step3()
     # openssl_functions(3, 2)
     # paso8()
-
     # step5(codificacion='latin-1')
+    paso8()
