@@ -103,7 +103,7 @@ def step3(remove_punctuation=False):
     if remove_punctuation:
         new = list()
         for t in txt_list:
-            new.append(clean_text(t))
+            new.append(clean_text(t, False))
         txt_list = new
         print("Texto limpo")
 
@@ -128,7 +128,7 @@ def step3(remove_punctuation=False):
     # Print dictionarys
     for fi, hcodes in zip(files_list, hcodes_list):
         fi.write("Diccionario:\n")
-        for elem in hcodes:
+        for elem in sorted(hcodes):
             fi.write(str(elem)+'\n')
         fi.write("=====================\n")
     print("Codigos impresos")
@@ -504,8 +504,9 @@ def get_bin(x, n=0):
 
 
 if __name__ == "__main__":
-    # step3()
+    # step3(True)
     # openssl_functions(3, 2)
     # paso8()
-    # step5(codificacion='latin-1')
-    paso8()
+    step5(codificacion='latin-1')
+    # paso8()
+    # generate_key(128)

@@ -39,7 +39,7 @@ def activity_two(frec_letters, msg, n_grams, fil):
     for key, frec in frec_letters:
         bit_info = math.log2(1/frec)
         #print(key, bit_info)
-        fil.write(""+str(key)+" - "+str(bit_info)+"\n")
+        fil.write(""+str(key)+"-"+str(math.ceil(bit_info))+"\n")
         entropia += (frec * bit_info)
     fil.write("\nEntropia = " + str(entropia))
     #print("\nEntropia = " + str(entropia))
